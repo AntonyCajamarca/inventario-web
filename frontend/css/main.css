@@ -1,0 +1,363 @@
+/* ============================================================
+   Sistema Web de Inventario y Ventas — estilos base
+   Paleta: sidebar azul oscuro, header blanco, tarjetas de color
+   ============================================================ */
+
+:root {
+  --sidebar-bg: #16233f;
+  --sidebar-bg-soft: #1b2b4d;
+  --sidebar-hover: #223a68;
+  --sidebar-active: #2f6fed;
+  --sidebar-text: #aab4cc;
+  --sidebar-text-active: #ffffff;
+
+  --header-bg: #ffffff;
+  --page-bg: #f1f3f8;
+
+  --text-primary: #1c2536;
+  --text-muted: #6b7280;
+  --border-color: #e6e9f0;
+
+  --accent: #2f6fed;
+  --accent-dark: #1f4fc4;
+
+  --card-green: #4caf7d;
+  --card-blue: #4aa8e0;
+  --card-orange: #ef7d5c;
+  --card-yellow: #f2c14e;
+
+  --danger: #e6564f;
+  --success: #2f9e6f;
+  --warning: #d99a1f;
+
+  --sidebar-width: 260px;
+  --header-height: 64px;
+
+  --font-display: "Sora", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--page-bg);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, .brand {
+  font-family: var(--font-display);
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ---------- Login ---------- */
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.login-brand-panel {
+  display: none;
+  flex: 1 1 45%;
+  background: var(--sidebar-bg);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  padding: 48px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (min-width: 992px) {
+  .login-brand-panel {
+    display: flex;
+  }
+}
+
+.login-brand-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+  opacity: 0.6;
+}
+
+.login-brand-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.login-brand-panel .brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.login-brand-panel .brand span {
+  color: var(--card-yellow);
+}
+
+.login-brand-panel h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  max-width: 420px;
+}
+
+.login-brand-panel p {
+  color: var(--sidebar-text);
+  max-width: 380px;
+}
+
+.login-form-panel {
+  flex: 1 1 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: var(--page-bg);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-card .form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.login-card .btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.login-card .btn-primary:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+/* ---------- App shell (paginas internas) ---------- */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  z-index: 40;
+}
+
+.app-sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  height: var(--header-height);
+  padding: 0 20px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-sidebar .brand span {
+  color: var(--card-yellow);
+}
+
+.app-sidebar .nav {
+  flex: 1;
+  padding: 14px 10px;
+  overflow-y: auto;
+}
+
+.app-sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--sidebar-text);
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.app-sidebar .nav-link i {
+  font-size: 1.05rem;
+  width: 20px;
+  text-align: center;
+}
+
+.app-sidebar .nav-link:hover {
+  background: var(--sidebar-hover);
+  color: white;
+}
+
+.app-sidebar .nav-link.active {
+  background: var(--sidebar-active);
+  color: white;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  height: var(--header-height);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 30;
+}
+
+.app-header .page-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.app-header .user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.app-header .user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.app-main {
+  margin-left: var(--sidebar-width);
+  padding-top: calc(var(--header-height) + 24px);
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 40px;
+  min-height: 100vh;
+}
+
+@media (max-width: 767.98px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+  .app-header,
+  .app-main {
+    left: 0;
+    margin-left: 0;
+  }
+}
+
+/* ---------- Tarjetas de resumen (dashboard) ---------- */
+.stat-card{
+    border:none;
+    border-radius:10px;
+    color:#fff;
+    min-height:180px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.stat-card .stat-icon{
+    font-size:40px;
+    margin-bottom:12px;
+
+    background:transparent;
+    width:auto;
+    height:auto;
+    flex:none;
+}
+
+.stat-card .stat-value{
+    padding:0;
+}
+
+.stat-card .stat-value h2{
+    margin:0;
+    font-size:48px;
+    font-weight:700;
+    line-height:1;
+}
+
+.stat-card .stat-value small{
+    display:block;
+    margin-top:8px;
+    font-size:22px;
+    opacity:.95;
+}
+
+.bg-stat-green { background: var(--card-green); }
+.bg-stat-blue { background: var(--card-blue); }
+.bg-stat-orange { background: var(--card-orange); }
+.bg-stat-yellow { background: var(--card-yellow); }
+
+/* ---------- Utilidades comunes ---------- */
+.panel-box {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.panel-box .panel-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.badge-stock-agotado {
+  background: var(--danger);
+}
+.badge-stock-bajo {
+  background: var(--warning);
+  color: #3a2c05;
+}
+.badge-stock-disponible {
+  background: var(--success);
+}
+
+.table-clickable tbody tr {
+  cursor: pointer;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
