@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 
 from app.database.session import get_db
 from app.models.user import User, EstadoUsuario
-from app.utils.security import verify_password, decode_access_token
+from app.schemas.user import PasswordChangeIn
+from app.utils.security import verify_password, decode_access_token, hash_password
 
 # Esquema simple de Bearer token: en Swagger, boton "Authorize" solo pide
 # pegar el access_token (sin usuario/contraseña, ya que el login es JSON).
@@ -67,3 +68,15 @@ def require_admin(user: User = Depends(get_current_user)) -> User:
             detail="No tienes permiso para realizar esta acción.",
         )
     return user
+
+
+def change_own_password(db: Session, user: User, data: PasswordChangeIn) -> None:
+    """El propio usuario cambia su contraseña; requiere la contraseña actual correcta."""
+    if not verify_password(data.password_actual, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="La contraseña actual no es correcta.",
+        )
+
+    user.password_hash = hash_password(data.password_nueva)
+    db.commit()

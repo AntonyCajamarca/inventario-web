@@ -89,6 +89,28 @@ async function cargarDashboard() {
         )
         .join("");
     }
+    // Productos por reponer (stock bajo / agotado)
+    const tablaPorReponer = document.getElementById("tablaPorReponer");
+    if (data.productos_por_reponer.length === 0) {
+      document.getElementById("porReponerVacio").classList.remove("d-none");
+    } else {
+      tablaPorReponer.innerHTML = data.productos_por_reponer
+        .map((p) => {
+          const badge =
+            p.estado_stock === "agotado"
+              ? '<span class="badge badge-stock-agotado">❌ Agotado</span>'
+              : '<span class="badge badge-stock-bajo">⚠ Bajo</span>';
+          return `
+          <tr>
+            <td>${p.codigo}</td>
+            <td style="font-weight:600;">${p.nombre}</td>
+            <td class="text-muted">${p.categoria}</td>
+            <td class="text-center">${p.stock}</td>
+            <td class="text-center">${badge}</td>
+          </tr>`;
+        })
+        .join("");
+    }
   } catch (error) {
     showAlert("alertBox", error.message);
   }

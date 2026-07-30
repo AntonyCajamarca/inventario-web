@@ -7,7 +7,9 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.models.media import Media
 from app.models.product import Product
+from app.models.user import User
 from app.schemas.product import ProductOut
+from app.schemas.user import UserOut
 from app.services.product_service import _to_out
 
 EXTENSIONES_PERMITIDAS = {"gif", "jpg", "jpeg", "png"}
@@ -16,6 +18,12 @@ TIPOS_MIME_PERMITIDOS = {"image/gif", "image/jpeg", "image/png"}
 
 def _carpeta_productos() -> str:
     carpeta = os.path.join(settings.UPLOADS_DIR, "products")
+    os.makedirs(carpeta, exist_ok=True)
+    return carpeta
+
+
+def _carpeta_usuarios() -> str:
+    carpeta = os.path.join(settings.UPLOADS_DIR, "users")
     os.makedirs(carpeta, exist_ok=True)
     return carpeta
 
@@ -49,8 +57,8 @@ def _validar_archivo(file: UploadFile, contenido: bytes) -> str:
     return extension
 
 
-def _eliminar_archivo_fisico(file_name: str) -> None:
-    ruta = os.path.join(_carpeta_productos(), file_name)
+def _eliminar_archivo_fisico(carpeta: str, file_name: str) -> None:
+    ruta = os.path.join(carpeta, file_name)
     if os.path.exists(ruta):
         os.remove(ruta)
 
@@ -86,7 +94,7 @@ def upload_product_media(db: Session, producto_id: int, file: UploadFile) -> Pro
     # Limpiar la imagen anterior (archivo + registro), ya que el producto
     # ahora apunta a la nueva
     if media_anterior:
-        _eliminar_archivo_fisico(media_anterior.file_name)
+        _eliminar_archivo_fisico(_carpeta_productos(), media_anterior.file_name)
         db.delete(media_anterior)
         db.commit()
 
@@ -110,6 +118,51 @@ def delete_product_media(db: Session, producto_id: int) -> None:
     product.media_id = None
     db.commit()
 
-    _eliminar_archivo_fisico(media.file_name)
+    _eliminar_archivo_fisico(_carpeta_productos(), media.file_name)
+    db.delete(media)
+    db.commit()
+
+
+def upload_user_photo(db: Session, user: User, file: UploadFile) -> UserOut:
+    contenido = file.file.read()
+    extension = _validar_archivo(file, contenido)
+
+    serie = secrets.token_hex(6)
+    nombre_final = f"{serie}_user{user.id}.{extension}"
+
+    ruta_destino = os.path.join(_carpeta_usuarios(), nombre_final)
+    with open(ruta_destino, "wb") as f:
+        f.write(contenido)
+
+    media_anterior = user.media
+
+    media = Media(file_name=nombre_final, file_type=file.content_type)
+    db.add(media)
+    db.flush()
+
+    user.media_id = media.id
+    db.commit()
+    db.refresh(user)
+
+    if media_anterior:
+        _eliminar_archivo_fisico(_carpeta_usuarios(), media_anterior.file_name)
+        db.delete(media_anterior)
+        db.commit()
+
+    return UserOut.model_validate(user)
+
+
+def delete_user_photo(db: Session, user: User) -> None:
+    if not user.media:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No tienes una foto de perfil asignada.",
+        )
+
+    media = user.media
+    user.media_id = None
+    db.commit()
+
+    _eliminar_archivo_fisico(_carpeta_usuarios(), media.file_name)
     db.delete(media)
     db.commit()

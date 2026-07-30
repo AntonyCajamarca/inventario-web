@@ -13,10 +13,10 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# En produccion, reemplaza "*" por el dominio real del frontend
+# En produccion, ALLOWED_ORIGINS en el .env debe apuntar a la URL real del frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.allowed_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,6 +33,8 @@ app.include_router(media.router)
 
 # Sirve las imagenes subidas (ej: /uploads/products/archivo.jpg)
 os.makedirs(os.path.join(settings.UPLOADS_DIR, "products"), exist_ok=True)
+os.makedirs(os.path.join(settings.UPLOADS_DIR, "users"), exist_ok=True)
+os.makedirs(os.path.join(settings.UPLOADS_DIR, "guides"), exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=settings.UPLOADS_DIR), name="uploads")
 
 

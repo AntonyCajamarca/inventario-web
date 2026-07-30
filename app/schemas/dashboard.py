@@ -3,6 +3,8 @@ from decimal import Decimal
 
 from pydantic import BaseModel
 
+from app.schemas.report import ProductoStockBajoOut
+
 
 class DashboardCounts(BaseModel):
     usuarios: int
@@ -38,3 +40,4 @@ class DashboardOut(BaseModel):
     productos_mas_vendidos: list[TopProductOut]
     ultimas_ventas: list[RecentSaleOut]
     productos_recientes: list[RecentProductOut]
+    productos_por_reponer: list[ProductoStockBajoOut]

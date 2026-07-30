@@ -24,6 +24,17 @@ class Settings(BaseSettings):
     UPLOADS_DIR: str = "uploads"
     MAX_UPLOAD_MB: int = 5
 
+    # CORS: dominios permitidos a consumir la API, separados por coma.
+    # En desarrollo local se deja "*" (cualquier origen). En produccion,
+    # se debe restringir a la URL real del frontend (ej: Vercel).
+    ALLOWED_ORIGINS: str = "*"
+
+    @property
+    def allowed_origins_list(self) -> list[str]:
+        if self.ALLOWED_ORIGINS.strip() == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 

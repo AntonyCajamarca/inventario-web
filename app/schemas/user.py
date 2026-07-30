@@ -16,6 +16,7 @@ class UserOut(BaseModel):
     email: EmailStr
     nivel: NivelUsuario
     estado: EstadoUsuario
+    foto: str | None = None
     fecha_creacion: datetime
     ultimo_login: datetime | None = None
 
@@ -47,3 +48,9 @@ class UserUpdate(BaseModel):
     nivel: NivelUsuario | None = None
     estado: EstadoUsuario | None = None
     password: str | None = Field(default=None, min_length=8, max_length=100)
+
+
+class PasswordChangeIn(BaseModel):
+    """Usado por el propio usuario para cambiar su contraseña (requiere la actual)."""
+    password_actual: str = Field(min_length=1)
+    password_nueva: str = Field(min_length=8, max_length=100)

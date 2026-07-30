@@ -12,6 +12,7 @@ from app.schemas.dashboard import (
     RecentProductOut,
     DashboardOut,
 )
+from app.services import report_data_service
 
 LIMITE_LISTAS = 5
 
@@ -81,4 +82,5 @@ def get_dashboard(db: Session) -> DashboardOut:
         productos_mas_vendidos=get_productos_mas_vendidos(db),
         ultimas_ventas=get_ultimas_ventas(db),
         productos_recientes=get_productos_recientes(db),
+        productos_por_reponer=report_data_service.get_stock_bajo(db).productos,
     )

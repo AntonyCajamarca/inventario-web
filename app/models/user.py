@@ -1,8 +1,8 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import String, Enum, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Enum, DateTime, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
@@ -30,9 +30,18 @@ class User(Base):
     estado: Mapped[EstadoUsuario] = mapped_column(
         Enum(EstadoUsuario), default=EstadoUsuario.activo, nullable=False
     )
+
+    media_id: Mapped[int | None] = mapped_column(ForeignKey("media.id"), nullable=True)
+    media: Mapped["Media | None"] = relationship()
+
     fecha_creacion: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
     ultimo_login: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
+
+    @property
+    def foto(self) -> str | None:
+        """URL relativa de la foto de perfil, calculada a partir de la relacion media."""
+        return f"/uploads/users/{self.media.file_name}" if self.media else None
