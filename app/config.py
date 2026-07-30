@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,6 +10,15 @@ class Settings(BaseSettings):
     """
 
     DATABASE_URL: str
+
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def normalizar_url_postgres(cls, v: str) -> str:
+        # Algunos proveedores (Heroku-style) usan "postgres://" en vez de
+        # "postgresql://", que es lo que espera SQLAlchemy.
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
