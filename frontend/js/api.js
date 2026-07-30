@@ -2,7 +2,8 @@
    api.js — Cliente HTTP compartido para hablar con el backend
    ============================================================ */
 
-const API_BASE_URL = "http://127.0.0.1:8000";
+/*const API_BASE_URL = "http://127.0.0.1:8000";*/
+const API_BASE_URL = "https://inventario-web-production-96b7.up.railway.app";
 
 const Auth = {
   getToken() {
